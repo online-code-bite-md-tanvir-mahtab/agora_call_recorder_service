@@ -56,14 +56,14 @@ class CloudRecordingService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("Outbound call initiated: $data");
+        debugPrint("Outbound call initiated: $data");
         return true;
       } else {
-        print("Outbound failed: ${response.body}");
+        debugPrint("Outbound failed: ${response.body}");
         return false;
       }
     } catch (e) {
-      print("Error initiating outbound: $e");
+      debugPrint("Error initiating outbound: $e");
       return false;
     }
   }
@@ -77,29 +77,29 @@ class CloudRecordingService {
     try {
       // Step A: Acquire Resource ID
       Map<String, dynamic> acquireData = await _acquire(channel, uid);
-      print("Acquire Data: $acquireData");
+      debugPrint("Acquire Data: $acquireData");
       _resourceId = acquireData["resourceId"];
       channel = acquireData["cname"];
-      print("Resource ID: $_resourceId");
+      debugPrint("Resource ID: $_resourceId");
 
       if (_resourceId == null) {
         throw Exception("Failed to get Resource ID");
       }
-      print("found resource id");
+      debugPrint("found resource id");
 
       // Step B: Start Recording
       final startData = await _start(_resourceId!, channel, "0", agora_token);
-      print("start data");
+      debugPrint("start data");
       _sid = startData['sid'];
-      print("SID: $_sid");
+      debugPrint("SID: $_sid");
       if (_sid == null) {
         throw Exception("Failed to get SID");
       }
 
-      print("✅ Cloud Recording Started. SID: $_sid");
+      debugPrint("✅ Cloud Recording Started. SID: $_sid");
       return true;
     } catch (e) {
-      print("❌ Cloud Recording Start Error: $e");
+      debugPrint("❌ Cloud Recording Start Error: $e");
       return false;
     }
   }
@@ -110,21 +110,21 @@ class CloudRecordingService {
     required String uid,
   }) async {
     if (_resourceId == null || _sid == null) {
-      print("⚠️ No active recording session to stop");
+      debugPrint("⚠️ No active recording session to stop");
       return {"success": false, "error": "No active recording session"};
     }
 
     try {
       final stopData = await _stop(_resourceId!, _sid!, channel, uid);
-      print(
+      debugPrint(
         "stopData : resourceId: $_resourceId, sid: $_sid, channel: $channel, uid: $uid",
       );
 
-      print("✅ Cloud Recording Stopped: $stopData");
+      debugPrint("✅ Cloud Recording Stopped: $stopData");
 
       return {"success": true, "data": stopData};
     } catch (e) {
-      print("❌ Cloud Recording Stop Error: $e");
+      debugPrint("❌ Cloud Recording Stop Error: $e");
 
       return {"success": false, "error": e.toString()};
     }
@@ -134,14 +134,16 @@ class CloudRecordingService {
     if (_resourceId == null || _sid == null) return;
 
     while (true) {
-      print("Checking upload status for Resource ID: $_resourceId, SID: $_sid");
+      debugPrint(
+        "Checking upload status for Resource ID: $_resourceId, SID: $_sid",
+      );
       final res = await queryRecording(_resourceId!, _sid!);
-      print("Query Result: $res");
+      debugPrint("Query Result: $res");
       final status = res["serverResponse"]?["uploadingStatus"];
-      print("Upload status: $status");
+      debugPrint("Upload status: $status");
 
       if (status == "uploaded") {
-        print("🎉 File is in GCS!");
+        debugPrint("🎉 File is in GCS!");
 
         // NOW you can clear
         _resourceId = null;
@@ -160,7 +162,7 @@ class CloudRecordingService {
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({"channel": channel, "uid": 0}),
     );
-    print("Acquire Response: ${response.body}");
+    debugPrint("Acquire Response: ${response.body}");
     return jsonDecode(response.body);
   }
 
@@ -170,7 +172,7 @@ class CloudRecordingService {
     String uid,
     String agora_token,
   ) async {
-    print(
+    debugPrint(
       "Starting recording with Resource ID: $resourceId, Channel: $channel, UID: $uid",
     );
     final response = await http.post(
@@ -184,7 +186,7 @@ class CloudRecordingService {
             agora_token, // Pass the RTC token if your backend requires it
       }),
     );
-    print("Start Response: ${response.body}");
+    debugPrint("Start Response: ${response.body}");
     return jsonDecode(response.body);
   }
 
@@ -194,7 +196,7 @@ class CloudRecordingService {
     String channel,
     String uid,
   ) async {
-    print(
+    debugPrint(
       "Stopping recording with Resource ID: $resourceId, SID: $sid, Channel: $channel, UID: $uid",
     );
     final response = await http.post(
@@ -207,7 +209,7 @@ class CloudRecordingService {
         "uid": "0",
       }),
     );
-    print("Stop Response: ${response.body}");
+    debugPrint("Stop Response: ${response.body}");
     return jsonDecode(response.body);
   }
 
@@ -221,7 +223,7 @@ class CloudRecordingService {
       body: jsonEncode({"resourceId": resourceId, "sid": sid}),
     );
 
-    print("Query Response: ${response.body}");
+    debugPrint("Query Response: ${response.body}");
     return jsonDecode(response.body);
   }
 
@@ -246,11 +248,11 @@ class CloudRecordingService {
       if (response.statusCode == 200) {
         return true;
       } else {
-        print("Call failed: ${response.body}");
+        debugPrint("Call failed: ${response.body}");
         return false;
       }
     } catch (e) {
-      print("HTTP error: $e");
+      debugPrint("HTTP error: $e");
       return false;
     }
   }
@@ -269,13 +271,13 @@ class CloudRecordingService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        print("Inbound details: $data");
+        debugPrint("Inbound details: $data");
         _isDialInReady = true;
       } else {
-        print("Failed to get dial-in details");
+        debugPrint("Failed to get dial-in details");
       }
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     }
   }
 
@@ -327,12 +329,12 @@ class CloudRecordingService {
       );
 
       if (res.statusCode == 200) {
-        print("FCM token sent to backend successfully");
+        debugPrint("FCM token sent to backend successfully");
       } else {
-        print("Failed to send FCM token: ${res.body}");
+        debugPrint("Failed to send FCM token: ${res.body}");
       }
     } catch (e) {
-      print("Error sending FCM token: $e");
+      debugPrint("Error sending FCM token: $e");
     }
   }
 
@@ -355,18 +357,20 @@ class CloudRecordingService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         if (data['success'] == true) {
-          print("Agora token retrieved: ${data['token']?.substring(0, 20)}...");
+          debugPrint(
+            "Agora token retrieved: ${data['token']?.substring(0, 20)}...",
+          );
           return data;
         } else {
-          print("Backend error: ${data['error']}");
+          debugPrint("Backend error: ${data['error']}");
           return null;
         }
       } else {
-        print("Server error: ${response.statusCode} - ${response.body}");
+        debugPrint("Server error: ${response.statusCode} - ${response.body}");
         return null;
       }
     } catch (e) {
-      print("Exception fetching Agora token: $e");
+      debugPrint("Exception fetching Agora token: $e");
       return null;
     }
   }
