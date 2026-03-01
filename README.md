@@ -1,39 +1,27 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# Agora Call Recorder Service
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+A lightweight Flutter service package for managing **Agora RTC** cloud recording, outbound/inbound PSTN calls, and secure token handling through your backend.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+This package provides an easy-to-use abstraction to:
+- Fetch fresh Agora RTC tokens
+- Initiate outbound PSTN calls
+- Start/stop Agora cloud recording
+- Communicate with your custom backend (e.g. Vercel + Flask)
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Perfect for apps that need reliable voice call recording with Agora integration.
 
 ## Features
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
+- Secure Agora RTC token generation (via backend)
+- Outbound PSTN call initiation (dial phone numbers)
+- Cloud recording start/stop with resource & SID tracking
+- Helper methods for querying recording status
+- Works with your existing Agora + Twilio backend
 
-## Getting started
+## Installation
 
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+Add this to your `pubspec.yaml`:
 
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
-```
-
-## Additional information
-
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```yaml
+dependencies:
+  agora_call_recorder_service: ^1.0.0
