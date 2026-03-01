@@ -8,9 +8,9 @@ class CloudRecordingService {
   final String baseUrl = "https://agora-backend-recording.vercel.app";
 
   // Add these state variables
-  String? _dialInNumber;
-  String? _dialInPin;
-  bool _isDialInReady = false;
+  // String? _dialInNumber;
+  // String? _dialInPin;
+  // bool _isDialInReady = false;
 
   // These are critical to stop the recording later
   String? _resourceId;
@@ -272,7 +272,7 @@ class CloudRecordingService {
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
         debugPrint("Inbound details: $data");
-        _isDialInReady = true;
+        // _isDialInReady = true;
       } else {
         debugPrint("Failed to get dial-in details");
       }
