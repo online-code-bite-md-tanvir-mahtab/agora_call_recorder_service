@@ -1,4 +1,4 @@
-## 1.0.1
+## 0.0.2
 
 * Added new function `endCall()` to force-end PSTN call via backend
 * Improved error handling and logging
