@@ -1,6 +1,6 @@
 name: agora_call_recorder_service
-description: "Flutter service for Agora cloud recording, PSTN calls, and token management."
-version: 0.0.1
+description: "bug fixed for ending the call"
+version: 0.0.2
 homepage: https://github.com/online-code-bite-md-tanvir-mahtab/agora_call_recorder_service
 
 environment:

@@ -1,3 +1,5 @@
-## 0.0.1
+## 1.0.1
 
-* TODO: Describe initial release.
+* Added new function `endCall()` to force-end PSTN call via backend
+* Improved error handling and logging
+* Fixed compatibility with latest Agora SDK

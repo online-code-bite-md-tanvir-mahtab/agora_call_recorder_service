@@ -374,4 +374,22 @@ class CloudRecordingService {
       return null;
     }
   }
+
+  Future<void> endPstnCall({required String callSid}) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/end-call'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({'call_sid': callSid}),
+      );
+
+      if (response.statusCode == 200) {
+        debugPrint("Call ended successfully");
+      } else {
+        debugPrint("Failed to end call: ${response.body}");
+      }
+    } catch (e) {
+      debugPrint("Error ending call: $e");
+    }
+  }
 }
